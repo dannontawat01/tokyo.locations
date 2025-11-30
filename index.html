@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap"
         rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -110,7 +111,6 @@
 <body
     class="min-h-screen font-sans antialiased selection:bg-accent selection:text-slate-900 flex flex-col items-center pt-20 pb-12 px-4">
 
-    <!-- Header Section -->
     <div class="text-center mb-12">
         <h1 class="text-5xl md:text-6xl font-bold mb-4 tracking-tight">
             <span class="text-white">Tokyo</span> <span class="text-accent">Locations</span>
@@ -120,13 +120,10 @@
         </p>
     </div>
 
-    <!-- Main Container -->
     <div class="w-full max-w-6xl space-y-6">
 
-        <!-- Control Bar -->
         <div class="control-bar rounded-2xl p-4 flex flex-col md:flex-row gap-4 items-stretch md:items-center">
 
-            <!-- Search -->
             <div class="relative flex-grow">
                 <svg xmlns="http://www.w3.org/2000/svg"
                     class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-500" fill="none"
@@ -138,9 +135,7 @@
                     class="w-full pl-10 pr-4 py-3 rounded-xl custom-input text-sm">
             </div>
 
-            <!-- Filters Group -->
             <div class="flex gap-3 flex-wrap">
-                <!-- Area Filter (Multi-select) -->
                 <div class="relative min-w-[180px]">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-accent z-10 pointer-events-none"
@@ -153,7 +148,8 @@
 
                     <button id="areaBtn" onclick="toggleDropdown('areaDropdown')"
                         class="w-full pl-10 pr-8 py-3 rounded-xl custom-input text-sm text-left flex items-center justify-between group focus:border-accent focus:ring-1 focus:ring-accent outline-none">
-                        <span id="areaBtnText" class="truncate text-slate-400">Select Areas</span>
+                        <span id="areaBtnText" class="truncate text-slate-400">Select
+                            Areas</span>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 group-hover:text-white transition-colors"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -161,14 +157,11 @@
                         </svg>
                     </button>
 
-                    <!-- Dropdown Menu -->
                     <div id="areaDropdown"
                         class="hidden absolute top-full left-0 mt-2 w-64 max-h-60 overflow-y-auto rounded-xl border border-slate-700 bg-slate-800 shadow-xl z-50 p-2 space-y-1">
-                        <!-- Checkboxes injected here -->
                     </div>
                 </div>
 
-                <!-- Type Filter (Multi-select) -->
                 <div class="relative min-w-[180px]">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-accent z-10 pointer-events-none"
@@ -179,7 +172,8 @@
 
                     <button id="typeBtn" onclick="toggleDropdown('typeDropdown')"
                         class="w-full pl-10 pr-8 py-3 rounded-xl custom-input text-sm text-left flex items-center justify-between group focus:border-accent focus:ring-1 focus:ring-accent outline-none">
-                        <span id="typeBtnText" class="truncate text-slate-400">Select Types</span>
+                        <span id="typeBtnText" class="truncate text-slate-400">Select
+                            Types</span>
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-4 w-4 absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 group-hover:text-white transition-colors"
                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -187,14 +181,11 @@
                         </svg>
                     </button>
 
-                    <!-- Dropdown Menu -->
                     <div id="typeDropdown"
                         class="hidden absolute top-full left-0 mt-2 w-64 max-h-60 overflow-y-auto rounded-xl border border-slate-700 bg-slate-800 shadow-xl z-50 p-2 space-y-1">
-                        <!-- Checkboxes injected here -->
                     </div>
                 </div>
 
-                <!-- Reset Filters Button -->
                 <button onclick="resetFilters()" title="Reset Filters"
                     class="p-3 rounded-xl custom-input hover:text-white hover:border-accent transition-colors group">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-hover:rotate-180 transition-transform"
@@ -204,7 +195,16 @@
                     </svg>
                 </button>
 
-                <!-- Add Button -->
+                <button onclick="toggleFavoritesFilter()" id="favBtn"
+                    class="p-3 rounded-xl custom-input hover:text-yellow-400 hover:border-yellow-400 transition-colors group"
+                    title="Show Favorites Only">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                </button>
+
                 <button onclick="openModal()"
                     class="bg-accent hover:bg-accent/90 text-slate-900 px-6 py-3 rounded-xl font-bold transition-all transform hover:scale-105 active:scale-95 flex items-center gap-2 shadow-lg shadow-accent/20">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -216,12 +216,9 @@
             </div>
         </div>
 
-        <!-- Content Area -->
         <div id="contentArea" class="space-y-4">
-            <!-- Content will be injected here -->
         </div>
 
-        <!-- Empty State -->
         <div id="emptyState" class="hidden text-center py-20">
             <div class="inline-block p-4 rounded-full bg-slate-800/50 mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-500" fill="none" viewBox="0 0 24 24"
@@ -236,13 +233,11 @@
 
     </div>
 
-    <!-- Modal -->
     <div id="addModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop -->
         <div id="modalBackdrop"
-            class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity opacity-0 duration-300"></div>
+            class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm transition-opacity opacity-0 duration-300">
+        </div>
 
-        <!-- Modal Panel -->
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                 <div id="modalPanel"
@@ -250,67 +245,65 @@
                     <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                         <div class="sm:flex sm:items-start">
                             <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-                                <h3 class="text-xl font-bold leading-6 text-white mb-6" id="modal-title">Add New
-                                    Location
+                                <h3 class="text-xl font-bold leading-6 text-white mb-4" id="modal-title">
+                                    Manage Data via Google Sheets
                                 </h3>
-                                <form id="addForm" class="space-y-4">
-                                    <input type="hidden" id="editId">
-                                    <div>
-                                        <label for="name"
-                                            class="block text-sm font-medium leading-6 text-slate-300 mb-1">Location
-                                            Name</label>
-                                        <input type="text" id="name" required
-                                            class="w-full rounded-lg bg-slate-900 border-slate-700 text-white focus:border-accent focus:ring-accent p-2.5">
+                                <div class="space-y-4">
+                                    <p class="text-slate-300 text-sm">
+                                        ข้อมูลถูกจัดการผ่าน Google Sheets เพื่อความสะดวกในการอัปเดตออนไลน์
+                                        กรุณาแก้ไขข้อมูลที่ต้นฉบับและกดรีเฟรช
+                                    </p>
+
+                                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700">
+                                        <label for="sheetEditUrl"
+                                            class="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Google
+                                            Sheet Edit Link</label>
+                                        <input type="text" id="sheetEditUrl"
+                                            placeholder="Paste your Google Sheet URL here..."
+                                            class="w-full rounded-lg bg-slate-900 border-slate-700 text-white focus:border-accent focus:ring-accent p-2.5 text-sm mb-2">
+                                        <p class="text-xs text-slate-500 mb-4">วางลิงก์หน้าแก้ไข Google Sheet
+                                            ของคุณที่นี่เพื่อความสะดวกในครั้งถัดไป</p>
+
+                                        <label for="sheetCsvUrl"
+                                            class="block text-xs font-medium text-slate-400 mb-2 uppercase tracking-wider">Google
+                                            Sheet CSV Link (Data Source)</label>
+                                        <input type="text" id="sheetCsvUrl"
+                                            placeholder="Paste your Published CSV URL here..."
+                                            class="w-full rounded-lg bg-slate-900 border-slate-700 text-white focus:border-accent focus:ring-accent p-2.5 text-sm mb-2">
+                                        <p class="text-xs text-slate-500">
+                                            File > Share > Publish to web > Link > CSV (เลือก 'Comma-separated values')
+                                        </p>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="area"
-                                                class="block text-sm font-medium leading-6 text-slate-300 mb-1">Area</label>
-                                            <input type="text" id="area" required list="areaSuggestions"
-                                                class="w-full rounded-lg bg-slate-900 border-slate-700 text-white focus:border-accent focus:ring-accent p-2.5">
-                                            <datalist id="areaSuggestions">
-                                                <option value="Shinjuku">
-                                                <option value="Shibuya">
-                                                <option value="Harajuku">
-                                                <option value="Akihabara">
-                                                <option value="Ueno">
-                                                <option value="Asakusa">
-                                                <option value="Ginza">
-                                            </datalist>
-                                        </div>
-                                        <div>
-                                            <label for="type"
-                                                class="block text-sm font-medium leading-6 text-slate-300 mb-1">Type</label>
-                                            <input type="text" id="type" required list="typeSuggestions"
-                                                class="w-full rounded-lg bg-slate-900 border-slate-700 text-white focus:border-accent focus:ring-accent p-2.5">
-                                            <datalist id="typeSuggestions">
-                                                <option value="ราเม็ง">
-                                                <option value="ร้านอาหาร">
-                                                <option value="คาเฟ่">
-                                                <option value="ช้อปปิ้ง">
-                                                <option value="สวนสาธารณะ">
-                                                <option value="วัด/ศาลเจ้า">
-                                            </datalist>
-                                        </div>
+
+                                    <div class="grid grid-cols-1 gap-3">
+                                        <button type="button" onclick="openGoogleSheet()"
+                                            class="w-full inline-flex justify-center items-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-bold text-white shadow-sm hover:bg-green-500 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                            </svg>
+                                            Open Google Sheet
+                                        </button>
+
+                                        <button type="button" onclick="refreshData()"
+                                            class="w-full inline-flex justify-center items-center gap-2 rounded-xl bg-accent px-4 py-3 text-sm font-bold text-slate-900 shadow-sm hover:bg-accent/90 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                            </svg>
+                                            Save & Refresh Data
+                                        </button>
                                     </div>
-                                    <div>
-                                        <label for="time"
-                                            class="block text-sm font-medium leading-6 text-slate-300 mb-1">Opening
-                                            Hours</label>
-                                        <input type="text" id="time" placeholder="e.g. 10:00 - 22:00" required
-                                            class="w-full rounded-lg bg-slate-900 border-slate-700 text-white focus:border-accent focus:ring-accent p-2.5">
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div
                         class="bg-slate-800/50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-slate-700">
-                        <button type="button" onclick="saveLocation()"
-                            class="inline-flex w-full justify-center rounded-xl bg-accent px-4 py-2.5 text-sm font-bold text-slate-900 shadow-sm hover:bg-accent/90 sm:ml-3 sm:w-auto transition-colors">Save
-                            Location</button>
                         <button type="button" onclick="closeModal()"
-                            class="mt-3 inline-flex w-full justify-center rounded-xl bg-slate-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-slate-600 sm:mt-0 sm:w-auto transition-colors">Cancel</button>
+                            class="mt-3 inline-flex w-full justify-center rounded-xl bg-slate-700 px-4 py-2.5 text-sm font-bold text-white shadow-sm hover:bg-slate-600 sm:mt-0 sm:w-auto transition-colors">Close</button>
                     </div>
                 </div>
             </div>
@@ -318,79 +311,14 @@
     </div>
 
     <script>
+        // Configuration
+        const DEFAULT_SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQiN5NBzIXPkQXVvLVAuf7-hjPmDKL51bmabbnGeUXvpqONFaqQyBK7Mu_EE0ouD3BwCuWm4FnvYQTM/pub?gid=0&single=true&output=csv';
+
         // State
-        let locations = JSON.parse(localStorage.getItem('tokyoTripLocations')) || [
-            { id: 1, name: "Ueno Menya Musashi Bukotsu Soden", time: "11:15 - 22:15", type: "ราเม็ง", area: "Ueno" },
-            { id: 2, name: "Shiba Park", time: "24 ชั่วโมง", type: "สวนสาธารณะ", area: "Minato" },
-            { id: 3, name: "Meiji Jingu Gaien", time: "24 ชั่วโมง", type: "สวนสาธารณะ", area: "Shinjuku" },
-            { id: 4, name: "topologie Tokyo flagship", time: "12:00 - 20:00", type: "ร้านกระเป๋า/แฟชั่น", area: "Harajuku (Shibuya)" },
-            { id: 5, name: "Saizeriya (สาขา Okachimachi)", time: "10:00 - 05:00", type: "ร้านอาหารอิตาเลียน (ครอบครัว)", area: "Okachimachi" },
-            { id: 6, name: "Saizeriya (สาขา Taito Ueno 4-chome)", time: "10:00 - 05:00", type: "ร้านอาหารอิตาเลียน (ครอบครัว)", area: "Ueno" },
-            { id: 7, name: "Shabusen Ginza Ten", time: "11:00 - 22:00", type: "ชาบูชาบู", area: "Ginza" },
-            { id: 8, name: "GU Okachimachi", time: "10:00 - 21:00", type: "ร้านเสื้อผ้า", area: "Okachimachi" },
-            { id: 9, name: "GU Asakusa ROX 3G Store", time: "10:30 - 21:00", type: "ร้านเสื้อผ้า", area: "Asakusa" },
-            { id: 10, name: "GU Flagship Store Ginza", time: "11:00 - 21:00", type: "ร้านเสื้อผ้า", area: "Ginza" },
-            { id: 11, name: "Uniqlo Ginza Flagship Store", time: "11:00 - 21:00", type: "ร้านเสื้อผ้า", area: "Ginza" },
-            { id: 12, name: "Coffee-kan - Asakusa", time: "07:30 - 22:00", type: "ร้านกาแฟ", area: "Asakusa" },
-            { id: 13, name: "Kith -Tokyo", time: "11:00 - 21:00", type: "ร้านเสื้อผ้า (Streetwear)", area: "Shibuya" },
-            { id: 14, name: "Tokyo City Flea Market", time: "09:00 - 15:00 (เฉพาะเสาร์-อาทิตย์)", type: "ตลาดนัดมือสอง", area: "Shinagawa (Oi Racecourse)" },
-            { id: 15, name: "Tower Records Shibuya", time: "11:00 - 22:00", type: "ร้านซีดี/ดนตรี", area: "Shibuya" },
-            { id: 16, name: "MEGA Don Quijote Shibuya", time: "24 ชั่วโมง", type: "ร้านสินค้าราคาประหยัด", area: "Shibuya" },
-            { id: 17, name: "Polène - Tokyo", time: "11:00 - 19:00", type: "ร้านกระเป๋าหนัง", area: "Omotesando (Minato)" },
-            { id: 18, name: "Ramen Tanaka soba Asakusa", time: "11:00 - 21:00", type: "ราเม็ง", area: "Asakusa" },
-            { id: 19, name: "Noriaki Bibi", time: "11:30 - 14:30, 18:00 - 23:00", type: "ราเม็ง", area: "Asakusa (Komagata)" },
-            { id: 20, name: "7-Eleven (Taito Kotobuki 1-chome)", time: "24 ชั่วโมง", type: "ร้านสะดวกซื้อ", area: "Asakusa (Kotobuki)" },
-            { id: 21, name: "My Basket Kuramae Ekimae Shop", time: "08:00 - 23:00", type: "ร้านขายของชำ", area: "Kuramae" },
-            { id: 22, name: "Maibasuketto Kuramaeekikitaten", time: "07:00 - 00:00", type: "ร้านขายของชำ", area: "Kuramae" },
-            { id: 23, name: "Daily Yamazaki Taito Kuramae Station", time: "24 ชั่วโมง", type: "ร้านสะดวกซื้อ", area: "Kuramae" },
-            { id: 24, name: "FamilyMart (Kuramae 2-chome)", time: "24 ชั่วโมง", type: "ร้านสะดวกซื้อ", area: "Kuramae" },
-            { id: 25, name: "LAWSON Kotobuki 3 Chome Store", time: "24 ชั่วโมง", type: "ร้านสะดวกซื้อ", area: "Asakusa (Kotobuki)" },
-            { id: 26, name: "Lawson Store 100 Asakusa Kotobuki", time: "05:00 - 02:00", type: "ร้านสะดวกซื้อ", area: "Asakusa (Kotobuki)" },
-            { id: 27, name: "Daily Yamazaki (Taito Misuji)", time: "24 ชั่วโมง", type: "ร้านสะดวกซื้อ", area: "Kuramae (Misuji)" },
-            { id: 28, name: "ศาลเจ้าเมจิ", time: "ตามพระอาทิตย์ขึ้น-ตก", type: "ศาลเจ้าชินโต", area: "Harajuku" },
-            { id: 29, name: "Jan Curry", time: "11:30 - 21:00", type: "แกงกะหรี่ญี่ปุ่น", area: "Akihabara" },
-            { id: 30, name: "Sakaeya Curry House", time: "10:30 - 20:00 (ปิดวันอาทิตย์)", type: "แกงกะหรี่ญี่ปุ่น", area: "Okachimachi" },
-            { id: 31, name: "Ippe Koppe by Tonkatsu Aoki", time: "11:00 - 20:00", type: "แกงกะหรี่ญี่ปุ่น", area: "Sotokanda" },
-            { id: 32, name: "Suzukien Asakusa", time: "11:00 - 17:00", type: "ร้านน้ำชา (ไอศกรีม)", area: "Asakusa" },
-            { id: 33, name: "Ramen Fukurou", time: "11:00 - 21:30 (ปิดวันอาทิตย์)", type: "ราเม็ง", area: "Asakusabashi" },
-            { id: 34, name: "Hanada Ueno", time: "11:00 - 22:20", type: "ราเม็ง", area: "Ueno" },
-            { id: 35, name: "Sanrio Gift Gate Asakusa", time: "10:30 - 18:00", type: "ร้านค้า", area: "Asakusa" },
-            { id: 36, name: "Don Quijote Asakusa", time: "24 ชั่วโมง", type: "ร้านสินค้าราคาประหยัด", area: "Asakusa" },
-            { id: 37, name: "วัดเซ็นโซ (Senso-ji)", time: "06:00 - 17:00 (ตึกหลัก)", type: "วัด", area: "Asakusa" },
-            { id: 38, name: "ตึกม่วง (Takeya)", time: "09:00 - 22:00", type: "ร้านสินค้าราคาประหยัด", area: "Ueno" },
-            { id: 39, name: "Matsuya Ueno Station Asakusa Gate", time: "24 ชั่วโมง", type: "ร้านข้าวหน้าเนื้อ", area: "Ueno" },
-            { id: 40, name: "Matsuya Asakusabashi", time: "24 ชั่วโมง", type: "ร้านข้าวหน้าเนื้อ", area: "Asakusabashi" },
-            { id: 41, name: "Matsuya (สาขา Shinjuku)", time: "24 ชั่วโมง", type: "ร้านข้าวหน้าเนื้อ", area: "Shinjuku" },
-            { id: 42, name: "Matsuya Ueno", time: "24 ชั่วโมง", type: "ร้านข้าวหน้าเนื้อ", area: "Ueno" },
-            { id: 43, name: "BAPE STORE® Dover Street Market", time: "11:00 - 20:00", type: "ร้านเสื้อผ้า", area: "Ginza" },
-            { id: 44, name: "Marion Crêpes Takeshita Street", time: "10:00 - 21:00", type: "เครป", area: "Harajuku" },
-            { id: 45, name: "MARION CRÊPES Asakusa", time: "11:30 - 21:00", type: "เครป", area: "Asakusa" },
-            { id: 46, name: "Marion Crepe Ueno Ameyoko", time: "12:00 - 21:00", type: "เครป", area: "Ueno (Ameyoko)" },
-            { id: 47, name: "โทริโยชิ โชเท็น (สาขา Shin-Okubo)", time: "11:30 - 04:00", type: "อิซาคายะ", area: "Shin-Okubo" },
-            { id: 48, name: "Toriyoshi Shoten Ueno 6 Chome", time: "24 ชั่วโมง", type: "อิซาคายะ", area: "Ueno" },
-            { id: 49, name: "Toriyoshi Shoten Asakusabashi", time: "11:30 - 04:00", type: "อิซาคายะ", area: "Asakusabashi" },
-            { id: 50, name: "Gyushige (สาขา Ueno)", time: "11:30 - 23:00", type: "ปิ้งย่างยากินิกุ", area: "Ueno" },
-            { id: 51, name: "Yakiniku King (สาขา Asakusa)", time: "11:00 - 23:00", type: "ปิ้งย่างยากินิกุ", area: "Asakusa" },
-            { id: 52, name: "Sanji", time: "11:00 - 15:00, 17:30 - 20:20", type: "ราเม็ง", area: "Higashi-Ueno" },
-            { id: 53, name: "Toritsune Shizendo", time: "11:30 - 14:00, 17:30 - 22:00", type: "ไก่", area: "Sotokanda" },
-            { id: 54, name: "Aidaya", time: "10:30 - 20:45", type: "ราเม็ง", area: "Okachimachi" },
-            { id: 55, name: "ราเม็ง ไค (Ramen Kai)", time: "11:00 - 21:00", type: "ราเม็ง", area: "Kuramae" },
-            { id: 56, name: "Ramen Haru", time: "11:00 - 21:00", type: "ราเม็ง", area: "Ginza" },
-            { id: 57, name: "Men Mitsui", time: "11:00 - 14:30, 18:00 - 20:00", type: "ราเม็ง", area: "Asakusa" },
-            { id: 58, name: "HOTEL MYSTAYS Asakusa", time: "24 ชั่วโมง (Reception)", type: "โรงแรม 3 ดาว", area: "Asakusa" },
-            { id: 59, name: "Hotel Mystays Asakusabashi", time: "24 ชั่วโมง (Reception)", type: "โรงแรม 3 ดาว", area: "Asakusabashi" },
-            { id: 60, name: "stay&go入谷北", time: "24 ชั่วโมง (Reception)", type: "โรงแรม", area: "Iriya" },
-            { id: 61, name: "Hotel Tavinos Asakusa", time: "24 ชั่วโมง (Reception)", type: "โรงแรม 3 ดาว", area: "Asakusa" },
-            { id: 62, name: "HOTEL GRAPHY NEZU", time: "24 ชั่วโมง (Reception)", type: "โรงแรม 3 ดาว", area: "Nezu" },
-            { id: 63, name: "Vivienne Westwood Red Label", time: "11:00 - 20:00", type: "ร้านเสื้อผ้า", area: "Harajuku" },
-            { id: 64, name: "HOKA Harajuku Store", time: "11:00 - 20:00", type: "ร้านชุดกีฬา", area: "Harajuku" },
-            { id: 65, name: "STUSSY Harajuku Chapter", time: "11:00 - 19:00", type: "ร้านเสื้อผ้า", area: "Harajuku" },
-            { id: 66, name: "Onitsuka Tiger Shibuya", time: "11:00 - 20:00", type: "ร้านรองเท้า", area: "Shibuya" },
-            { id: 67, name: "SEIBU Shibuya Store", time: "10:00 - 20:00", type: "ห้างสรรพสินค้า", area: "Shibuya" },
-            { id: 68, name: "Parco Theatre (ตึก Shibuya Parco)", time: "11:00 - 21:00 (เวลาตึก)", type: "โรงละคร", area: "Shibuya" },
-            { id: 69, name: "BAPE STORE® SHIBUYA", time: "11:00 - 21:00", type: "ร้านเสื้อผ้า", area: "Shibuya" },
-            { id: 70, name: "Stussy (สาขา Shibuya)", time: "11:00 - 19:00", type: "ร้านเสื้อผ้า", area: "Shibuya" }
-        ];
+        let locations = [];
+        let selectedAreas = new Set();
+        let selectedTypes = new Set();
+        let showFavoritesOnly = false;
 
         // DOM Elements
         const contentArea = document.getElementById('contentArea');
@@ -406,9 +334,57 @@
         const areaBtn = document.getElementById('areaBtn');
         const typeBtn = document.getElementById('typeBtn');
 
-        // State for filters
-        let selectedAreas = new Set();
-        let selectedTypes = new Set();
+        // Fetch Data from Google Sheet
+        function fetchLocations() {
+            // Show loading state
+            document.getElementById('contentArea').innerHTML = `
+                <div class="text-center py-20">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent mb-4"></div>
+                    <h3 class="text-xl font-bold text-white">Loading locations...</h3>
+                </div>
+            `;
+
+            // Get URL from localStorage or default
+            const sheetUrl = localStorage.getItem('tokyoTripSheetCsvUrl') || DEFAULT_SHEET_URL;
+
+            // Use CORS proxy if running locally (file://) to avoid CORS errors
+            const url = window.location.protocol === 'file:'
+                ? 'https://corsproxy.io/?' + encodeURIComponent(sheetUrl)
+                : sheetUrl;
+
+            Papa.parse(url, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                    locations = results.data
+                        .filter(row => row.id && row.name)
+                        .map(row => ({
+                            id: parseInt(row.id),
+                            name: row.name,
+                            time: row.time,
+                            type: row.type,
+                            area: row.area,
+                            isFavorite: row.favorite === '1'
+                        }));
+
+                    populateAreaFilter();
+                    populateTypeFilter();
+                    render();
+                },
+                error: function (err) {
+                    console.error('Error fetching CSV:', err);
+                    document.getElementById('contentArea').innerHTML = `
+                        <div class="text-center py-20 text-red-400">
+                            <h3 class="text-xl font-bold mb-2">Failed to load data</h3>
+                            <p>Please check your internet connection or the CSV URL.</p>
+                            <p class="text-sm mt-2 opacity-75">${err.message || 'Unknown error'}</p>
+                            <button onclick="openModal()" class="mt-4 px-4 py-2 bg-slate-700 rounded-lg text-sm hover:bg-slate-600 transition-colors">Check Settings</button>
+                        </div>
+                    `;
+                }
+            });
+        }
 
         // Helper to get color based on type keywords
         function getTypeColor(type) {
@@ -430,9 +406,7 @@
 
         // Init
         function init() {
-            populateAreaFilter();
-            populateTypeFilter();
-            render();
+            fetchLocations(); // Fetch data instead of immediate render
 
             // Event Listeners
             searchInput.addEventListener('input', render);
@@ -457,14 +431,14 @@
             const areas = [...new Set(locations.map(l => l.area))].sort();
 
             areaDropdown.innerHTML = areas.map(area => `
-                <label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition-colors select-none">
-                    <input type="checkbox" value="${area}" 
-                        ${selectedAreas.has(area) ? 'checked' : ''}
-                        onchange="toggleSelection('area', '${area}')"
-                        class="custom-checkbox w-4 h-4 text-accent">
-                    <span class="text-sm text-slate-300">${area}</span>
-                </label>
-            `).join('');
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition-colors select-none">
+                                            <input type="checkbox" value="${area}"
+                                                ${selectedAreas.has(area) ? 'checked' : ''}
+                                                onchange="toggleSelection('area', '${area}')"
+                                                class="custom-checkbox w-4 h-4 text-accent">
+                                                <span class="text-sm text-slate-300">${area}</span>
+                                        </label>
+                                        `).join('');
 
             updateFilterButton('area');
         }
@@ -473,14 +447,14 @@
             const types = [...new Set(locations.map(l => l.type))].sort();
 
             typeDropdown.innerHTML = types.map(type => `
-                <label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition-colors select-none">
-                    <input type="checkbox" value="${type}" 
-                        ${selectedTypes.has(type) ? 'checked' : ''}
-                        onchange="toggleSelection('type', '${type}')"
-                        class="custom-checkbox w-4 h-4 text-accent">
-                    <span class="text-sm text-slate-300">${type}</span>
-                </label>
-            `).join('');
+                                        <label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer transition-colors select-none">
+                                            <input type="checkbox" value="${type}"
+                                                ${selectedTypes.has(type) ? 'checked' : ''}
+                                                onchange="toggleSelection('type', '${type}')"
+                                                class="custom-checkbox w-4 h-4 text-accent">
+                                                <span class="text-sm text-slate-300">${type}</span>
+                                        </label>
+                                        `).join('');
 
             updateFilterButton('type');
         }
@@ -505,10 +479,6 @@
                 btnText.textContent = `Select ${label}`;
                 btnText.classList.add('text-slate-400');
                 btnText.classList.remove('text-white');
-            } else if (set.size === 1) {
-                btnText.textContent = [...set][0];
-                btnText.classList.remove('text-slate-400');
-                btnText.classList.add('text-white');
             } else {
                 btnText.textContent = `${set.size} ${label} Selected`;
                 btnText.classList.remove('text-slate-400');
@@ -520,6 +490,7 @@
             searchInput.value = '';
             selectedAreas.clear();
             selectedTypes.clear();
+            showFavoritesOnly = false;
 
             // Re-populate to clear checkboxes visually
             populateAreaFilter();
@@ -537,32 +508,26 @@
 
                 const matchesArea = selectedAreas.size === 0 || selectedAreas.has(loc.area);
                 const matchesType = selectedTypes.size === 0 || selectedTypes.has(loc.type);
+                const matchesFavorite = !showFavoritesOnly || loc.isFavorite;
 
-                return matchesSearch && matchesArea && matchesType;
+                return matchesSearch && matchesArea && matchesType && matchesFavorite;
             });
         }
 
+        function toggleFavoritesFilter() {
+            showFavoritesOnly = !showFavoritesOnly;
+            render();
+        }
+
+        function toggleFavorite(id) {
+            openModal();
+        }
+
         function deleteLocation(id) {
-            if (confirm('Are you sure you want to delete this location?')) {
-                locations = locations.filter(loc => loc.id !== id);
-                localStorage.setItem('tokyoTripLocations', JSON.stringify(locations));
-                populateAreaFilter();
-                populateTypeFilter();
-                render();
-            }
+            openModal();
         }
 
         function editLocation(id) {
-            const loc = locations.find(l => l.id === id);
-            if (!loc) return;
-
-            document.getElementById('editId').value = loc.id;
-            document.getElementById('name').value = loc.name;
-            document.getElementById('area').value = loc.area;
-            document.getElementById('type').value = loc.type;
-            document.getElementById('time').value = loc.time;
-
-            document.getElementById('modal-title').textContent = 'Edit Location';
             openModal();
         }
 
@@ -577,124 +542,153 @@
 
             emptyState.classList.add('hidden');
 
+            // Update Fav Button State
+            const favBtn = document.getElementById('favBtn');
+            if (favBtn) {
+                if (showFavoritesOnly) {
+                    favBtn.classList.add('text-yellow-400', 'border-yellow-400');
+                    favBtn.querySelector('svg').classList.add('fill-current');
+                } else {
+                    favBtn.classList.remove('text-yellow-400', 'border-yellow-400');
+                    favBtn.querySelector('svg').classList.remove('fill-current');
+                }
+            }
+
             // Desktop Table View
             const tableHtml = `
-                <div class="hidden md:block overflow-hidden rounded-2xl control-bar">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="border-b border-white/5 text-slate-400 text-xs font-bold uppercase tracking-wider">
-                                <th class="p-5">Location Name</th>
-                                <th class="p-5">Hours</th>
-                                <th class="p-5">Type</th>
-                                <th class="p-5">Area</th>
-                                <th class="p-5 text-right">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-white/5">
-                            ${filtered.map(loc => `
-                                <tr class="hover:bg-white/5 transition-colors group">
-                                    <td class="p-5 font-bold text-white text-lg">${loc.name}</td>
-                                    <td class="p-5 text-slate-400 font-mono text-sm">${loc.time}</td>
-                                    <td class="p-5">
-                                        <span class="font-medium ${getTypeColor(loc.type)}">
-                                            ${loc.type}
-                                        </span>
-                                    </td>
-                                    <td class="p-5 text-slate-300 font-medium">${loc.area}</td>
-                                    <td class="p-5 text-right">
-                                        <div class="flex items-center justify-end gap-3">
-                                            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name + ' ' + loc.area + ' Tokyo')}" 
-                                            target="_blank"
-                                            class="text-accent hover:text-white transition-colors inline-flex items-center gap-1 opacity-60 group-hover:opacity-100"
-                                            title="Open in Maps">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                </svg>
-                                            </a>
-                                            <button onclick="editLocation(${loc.id})" 
-                                                class="text-slate-400 hover:text-accent transition-colors opacity-60 group-hover:opacity-100"
-                                                title="Edit Location">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                </svg>
-                                            </button>
-                                            <button onclick="deleteLocation(${loc.id})" 
-                                                class="text-red-400 hover:text-red-300 transition-colors opacity-60 group-hover:opacity-100"
-                                                title="Delete Location">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="hidden md:block overflow-hidden rounded-2xl control-bar">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-white/5 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                            <th class="p-5">Location Name</th>
+                            <th class="p-5">Hours</th>
+                            <th class="p-5">Type</th>
+                            <th class="p-5">Area</th>
+                            <th class="p-5 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/5">
+                        ${filtered.map(loc => `
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="p-5 font-bold text-white text-lg">
+                                <div class="flex items-center gap-3">
+                                    <button onclick="toggleFavorite(${loc.id})" class="text-yellow-400 hover:scale-110 transition-transform focus:outline-none" title="${loc.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${loc.isFavorite ? 'fill-current' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                                        </svg>
+                                    </button>
+                                    ${loc.name}
+                                </div>
+                            </td>
+                            <td class="p-5 text-slate-400 font-mono text-sm">${loc.time}</td>
+                            <td class="p-5">
+                                <span class="font-medium ${getTypeColor(loc.type)}">
+                                    ${loc.type}
+                                </span>
+                            </td>
+                            <td class="p-5 text-slate-300 font-medium">${loc.area}</td>
+                            <td class="p-5 text-right">
+                                <div class="flex items-center justify-end gap-3">
+                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name + ' ' + loc.area + ' Tokyo')}" 
+                                    target="_blank"
+                                    class="text-accent hover:text-white transition-colors inline-flex items-center gap-1 opacity-60 group-hover:opacity-100"
+                                    title="Open in Maps">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </a>
+                                    <button onclick="editLocation(${loc.id})" 
+                                        class="text-slate-400 hover:text-accent transition-colors opacity-60 group-hover:opacity-100"
+                                        title="Edit Location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                        </svg>
+                                    </button>
+                                    <button onclick="deleteLocation(${loc.id})" 
+                                        class="text-red-400 hover:text-red-300 transition-colors opacity-60 group-hover:opacity-100"
+                                        title="Delete Location">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
             `;
 
             // Mobile Card View
             const cardsHtml = `
-                <div class="md:hidden grid grid-cols-1 gap-4">
-                    ${filtered.map(loc => `
-                        <div class="control-bar p-5 rounded-2xl active:scale-[0.98] transition-transform relative group">
-                            <div class="flex justify-between items-start mb-3">
-                                <div class="pr-20">
-                                    <h3 class="text-lg font-bold text-white">${loc.name}</h3>
-                                    <p class="text-slate-400 text-sm flex items-center gap-1 mt-1">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        </svg>
-                                        ${loc.area}
-                                    </p>
-                                </div>
-                                <span class="text-xs font-bold uppercase tracking-wider ${getTypeColor(loc.type)}">
-                                    ${loc.type}
-                                </span>
-                            </div>
-                            
-                            <div class="absolute top-5 right-5 flex gap-2">
-                                <button onclick="editLocation(${loc.id})" 
-                                    class="text-slate-600 hover:text-accent transition-colors p-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                </button>
-                                <button onclick="deleteLocation(${loc.id})" 
-                                    class="text-slate-600 hover:text-red-400 transition-colors p-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </button>
-                            </div>
+            <div class="md:hidden grid grid-cols-1 gap-4 pb-20">
+                ${filtered.map(loc => `
+                <div class="bg-slate-800/40 backdrop-blur-md border border-white/5 p-5 rounded-2xl shadow-lg relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-4 z-10">
+                        <button onclick="toggleFavorite(${loc.id})" class="text-yellow-400 hover:scale-110 transition-transform focus:outline-none p-2 rounded-full hover:bg-white/5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ${loc.isFavorite ? 'fill-current' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                            </svg>
+                        </button>
+                    </div>
 
-                            <div class="flex items-center justify-between mt-4 pt-4 border-t border-white/5">
-                                <div class="flex items-center gap-2 text-sm text-slate-500 font-mono">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    ${loc.time}
-                                </div>
-                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name + ' ' + loc.area + ' Tokyo')}" 
-                                   target="_blank"
-                                   class="bg-white/5 hover:bg-white/10 text-accent px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1">
-                                    Map
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                    </svg>
-                                </a>
-                            </div>
+                    <div class="pr-12 mb-3">
+                        <h3 class="text-xl font-bold text-white leading-tight break-words">${loc.name}</h3>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-white/5 text-slate-300 border border-white/5">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            ${loc.area}
+                        </span>
+                        <span class="px-2.5 py-1 rounded-md text-xs font-medium ${getTypeColor(loc.type)} bg-white/5 border border-white/5">
+                            ${loc.type}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-2 text-slate-400 text-sm mb-5 font-mono bg-slate-900/30 p-2 rounded-lg w-fit">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        ${loc.time}
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-white/5">
+                        <div class="flex gap-2">
+                            <button onclick="editLocation(${loc.id})" class="p-2 text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 rounded-lg transition-colors" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h10a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                            <button onclick="deleteLocation(${loc.id})" class="p-2 text-slate-400 hover:text-red-400 bg-white/5 hover:bg-white/10 rounded-lg transition-colors" title="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
                         </div>
-                    `).join('')}
+                        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.name + ' ' + loc.area + ' Tokyo')}" 
+                           target="_blank"
+                           class="flex items-center gap-2 px-4 py-2 bg-accent text-slate-900 rounded-lg font-bold text-sm hover:bg-accent/90 transition-colors shadow-lg shadow-accent/10">
+                            <span>Navigate</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </a>
+                    </div>
                 </div>
+                `).join('')
+                }
+            </div>
             `;
 
             contentArea.innerHTML = tableHtml + cardsHtml;
         }
 
-        // Modal Functions
         function openModal() {
             modal.classList.remove('hidden');
             // Trigger reflow
@@ -703,6 +697,18 @@
             modalBackdrop.classList.remove('opacity-0');
             modalPanel.classList.remove('opacity-0', 'scale-95');
             modalPanel.classList.add('opacity-100', 'scale-100');
+
+            // Pre-fill URL if saved
+            const savedUrl = localStorage.getItem('tokyoTripSheetEditUrl');
+            if (savedUrl) {
+                document.getElementById('sheetEditUrl').value = savedUrl;
+            }
+
+            // Pre-fill CSV URL if saved
+            const savedCsvUrl = localStorage.getItem('tokyoTripSheetCsvUrl');
+            if (savedCsvUrl) {
+                document.getElementById('sheetCsvUrl').value = savedCsvUrl;
+            }
         }
 
         function closeModal() {
@@ -712,46 +718,44 @@
 
             setTimeout(() => {
                 modal.classList.add('hidden');
-                document.getElementById('addForm').reset();
-                document.getElementById('editId').value = '';
-                document.getElementById('modal-title').textContent = 'Add New Location';
             }, 300);
         }
 
-        function saveLocation() {
-            const form = document.getElementById('addForm');
-            if (!form.checkValidity()) {
-                form.reportValidity();
-                return;
-            }
+        function openGoogleSheet() {
+            const urlInput = document.getElementById('sheetEditUrl');
+            const url = urlInput.value.trim();
 
-            const editId = document.getElementById('editId').value;
-            const name = document.getElementById('name').value;
-            const area = document.getElementById('area').value;
-            const type = document.getElementById('type').value;
-            const time = document.getElementById('time').value;
-
-            if (editId) {
-                // Update existing
-                const index = locations.findIndex(l => l.id == editId);
-                if (index !== -1) {
-                    locations[index] = { ...locations[index], name, area, type, time };
-                }
+            if (url) {
+                localStorage.setItem('tokyoTripSheetEditUrl', url);
+                window.open(url, '_blank');
             } else {
-                // Add new
-                const newLoc = {
-                    id: Date.now(),
-                    name, area, type, time
-                };
-                locations.push(newLoc);
+                alert('กรุณาวางลิงก์ Google Sheet ของคุณก่อน');
+                urlInput.focus();
+            }
+        }
+
+        function refreshData() {
+            // Save CSV URL
+            const csvUrlInput = document.getElementById('sheetCsvUrl');
+            const csvUrl = csvUrlInput.value.trim();
+            if (csvUrl) {
+                localStorage.setItem('tokyoTripSheetCsvUrl', csvUrl);
             }
 
-            localStorage.setItem('tokyoTripLocations', JSON.stringify(locations));
-
-            populateAreaFilter();
-            populateTypeFilter();
-            render();
             closeModal();
+            fetchLocations();
+        }
+
+        function saveLocation() {
+            openModal();
+        }
+
+        function deleteLocation(id) {
+            openModal();
+        }
+
+        function editLocation(id) {
+            openModal();
         }
 
         // Close modal on outside click
