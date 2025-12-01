@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tokyo Trip Log</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗼</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kanit:wght@300;400;500;600&display=swap"
@@ -375,6 +377,8 @@
         function fetchLocations() {
             console.log('fetchLocations called');
 
+            let hasLocalData = false;
+
             // Check for local overrides first
             const localData = localStorage.getItem('tokyoTripLocations');
             if (localData) {
@@ -383,20 +387,23 @@
                     locations = JSON.parse(localData);
                     updateFilters();
                     render();
-                    return; // Skip fetching if we have local data
+                    hasLocalData = true;
+                    // We continue to fetch to update the data (stale-while-revalidate)
                 } catch (e) {
                     console.error('Error parsing local data:', e);
                     localStorage.removeItem('tokyoTripLocations');
                 }
             }
 
-            // Show loading state
-            contentArea.innerHTML = `
+            // Show loading state only if we have no data to show
+            if (!hasLocalData) {
+                contentArea.innerHTML = `
                 <div class="text-center py-20">
                     <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-accent border-t-transparent mb-4"></div>
                     <h3 class="text-xl font-bold text-white">Loading locations...</h3>
                 </div>
             `;
+            }
 
             // Get URL from localStorage or default
             const sheetUrl = localStorage.getItem('tokyoTripSheetCsvUrl') || DEFAULT_SHEET_URL;
